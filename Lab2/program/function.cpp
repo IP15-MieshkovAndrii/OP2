@@ -103,8 +103,8 @@ bool hours(string time){
     m = time.substr(3, 2);
     int number_h = atoi(h.c_str()), number_m = atoi(m.c_str());
 
-    if(number_h>=0 || number_h<=23){
-        if(number_m>=0 || number_m<=59){
+    if(number_h>=0 && number_h<=23){
+        if(number_m>=0 && number_m<=59){
             flag = false;
         }
     }
