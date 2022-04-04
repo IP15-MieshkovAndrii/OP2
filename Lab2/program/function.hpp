@@ -2,6 +2,7 @@
 #define function_hpp
 #include <string>
 using namespace std;
+//структура для запису часу
 struct Time {
     int hours, minutes;
     
@@ -12,12 +13,13 @@ struct Time {
         this->minutes = atoi(time_str.substr(3, 2).c_str());
     }
 };
-
+//структура для данних події
 struct EList {
     string name;
     Time time_start, duration;
 };
 
+//структура для вільного часу
 struct FreeList{
     Time start, finish, free_dur;
 };

@@ -15,11 +15,11 @@ int main()
     cout<<endl;
     output_first(name_in);//вивід вихідного файлу
     
-    vector <EList> text = file_to_text(name_in);
+    vector <EList> text = file_to_text(name_in);//перенесення тексту файлу у змінну
     
-    next_event(text);
+    next_event(text);//знаходження наступної події
     
-    string name_out = free_time(text);//переписання вихідного файлу
+    string name_out = free_time(text);//створення другого файлу
     output_second(name_out);//вивід створеного файлу
     cout<<endl;
     cin.get();

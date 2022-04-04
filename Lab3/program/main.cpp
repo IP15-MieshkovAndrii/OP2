@@ -15,16 +15,16 @@ int main() {
     cin>>num_st;
     cout<<endl;
     
-    Student *catalog = new Student [num_st];
-    catalog = array_objects(catalog, num_st);
+    Student *catalog = new Student [num_st];//масив студентів
+    catalog = array_objects(catalog, num_st);//заповнення масиву студентів
     while(flag == 'y'){
-        old_number = oldest(catalog, num_st);
+        old_number = oldest(catalog, num_st);//знаходження найстаршого студента
         cout<<catalog[old_number].name<<endl;
         cout<<"\nХотите еще найти студента? (y/n): ";
         cin>>flag;
     }
     
-    delete [] catalog;
+    delete [] catalog;//видалення масиву
 
 }
 

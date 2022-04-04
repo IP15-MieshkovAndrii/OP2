@@ -6,7 +6,7 @@
 
 using namespace std;
 
-class Student{
+class Student{//клас Студент
 public:
     Student() {}
     Student(string name, string number, string dOb){
@@ -14,9 +14,9 @@ public:
         this->number = number;
         this->dOb = dOb;
     }
-    string name;
-    string number;
-    string dOb;
+    string name;//імʼя
+    string number;//номер групи
+    string dOb;//дата народження
 };
 
 Student* array_objects(Student*, int);

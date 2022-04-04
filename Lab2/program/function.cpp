@@ -26,25 +26,25 @@ string to_do_list(){
     while(new_line == 'y'){
         cout<<"Enter a name of task(maximum number of characters - 20): ";
         cin>>task_name;
-        task_name = verifyName(task_name);
+        task_name = verifyName(task_name);//перевірка вводу
         text.name = task_name;
         
         cout<<"Enter an event start time in this format HH:MM: ";
         cin>>time_start;
-        time_start = verifyTime(time_start, duration, preTime);
+        time_start = verifyTime(time_start, duration, preTime);//перевірка вводу
         preTime = time_start;
         text.time_start = time_start;
         
         
         cout<<"Enter a duration in this format HH:MM: ";
         cin>>duration;
-        duration = verifyDuration(duration, time_start);
+        duration = verifyDuration(duration, time_start);//перевірка вводу
         text.duration = duration;
         
         
-        fout.write((char*)&text, sizeof(EList));
+        fout.write((char*)&text, sizeof(EList));//запис у файл
 
-        if(duration_normal(duration, time_start)){
+        if(duration_normal(duration, time_start)){//перевірка, що залишився час для ще одної події
             cout << "\nDo you want to continue input task?[y/n]: ";
             cin >> new_line;
         }
@@ -62,6 +62,7 @@ string to_do_list(){
 
 
 string verifyName(string name){
+    //перевірка слова за кількістю літер
     while (name.size()>20 || name.size()<1){
         cout << "Enter a name again: ";
         cin >> name;
@@ -70,8 +71,8 @@ string verifyName(string name){
 }
 
 string verifyTime(string time, string duration, string preTime){
-    bool flag_hours = hours(time);
-    bool flag_duration = dur(time, duration, preTime);
+    bool flag_hours = hours(time);//перевірка правильність написання часу
+    bool flag_duration = dur(time, duration, preTime);//перевірка на сумісність часу події з тривалістю минулої
 
     while(time.size()!=5 || time[2]!=':' || flag_hours || flag_duration){
         cout << "Enter a time again: ";
@@ -83,8 +84,8 @@ string verifyTime(string time, string duration, string preTime){
 }
 
 string verifyDuration(string duration, string time){
-    bool flag_hours = hours(duration);
-    bool flag_dif = false;
+    bool flag_hours = hours(duration);//перевірка правильність написання часу
+    bool flag_dif = false;//перевірка, що подія не може закінчитися наступного для
     if(time_to_int(duration)+time_to_int(time) > 1440) flag_dif = true;
     while(duration.size()!=5 || duration[2]!=':' || flag_hours || flag_dif){
         cout << "Enter a duration again: ";
@@ -113,7 +114,7 @@ bool hours(string time){
 
 bool dur(string time, string duration, string preTime){
     bool flag = false;
-    int number = time_to_int(time);
+    int number = time_to_int(time);//переводимо час у кількість хвилин
     if(preTime!=""){
         int time_before = time_to_int(preTime);
         int d = time_to_int(duration);
@@ -140,7 +141,7 @@ bool duration_normal(string duration, string time){
 
 void output_first(string name){//виводимо текст файлу
     EList text;
-    ifstream fin(name, ios::binary);
+    ifstream fin(name, ios::binary);//відкриваємо файл для читання
     
     cout<<"File "<< name <<": \n";
     
@@ -153,7 +154,7 @@ void output_first(string name){//виводимо текст файлу
 
 void output_second(string name){//виводимо текст файлу
     FreeList text;
-    ifstream fin(name, ios::binary);
+    ifstream fin(name, ios::binary);//відкриваємо файл для читання
     
     cout<<"File "<< name <<": \n";
     
@@ -168,7 +169,7 @@ void output_second(string name){//виводимо текст файлу
 vector <EList> file_to_text(string name){
     vector<EList> pack;
     EList text;
-    ifstream fin(name, ios::binary);
+    ifstream fin(name, ios::binary);//відкриваємо файл для читання
     
     while (fin.read((char*)&text, sizeof(EList))){
         pack.push_back(text);
@@ -186,10 +187,11 @@ void next_event(vector <EList> text){
     int time_now, time_task;
     int dif, min = 1440;
     string m;
-    struct tm * timeinfo;
+    struct tm * timeinfo;//знаходимо час цього моменту
     time( &rawtime );
     timeinfo = localtime ( &rawtime );
     int hour = timeinfo->tm_hour, minute = timeinfo->tm_min;
+    //виводимо час у правильному форматі
     if(hour>=10 && minute<10) cout<<"Time now: "<< hour << ":" << "0"<< minute <<endl;
     if(hour<10 && minute<10) cout<<"Time now: "<< "0" << hour << ":" << "0"<< minute <<endl;
     if(hour<10 && minute>=10) cout<<"Time now: "<< "0" << hour << ":" << minute <<endl;
@@ -205,6 +207,7 @@ void next_event(vector <EList> text){
             min = dif;
         }
     }
+    //знаходимо наступну подію, якщо така існує
     if(dif>0){
         cout<<"Next event: "<< text[j].name <<", "<<  int_to_time(text[j].time_start)<<", "<<"duration: "<< int_to_time(text[j].duration)<< ";"<<endl<<endl;
     }
@@ -226,8 +229,8 @@ string free_time(vector <EList> text){
     for(int i = 0; i < text.size(); i++){
         time_n = text[i].time_start.hours * 60 + text[i].time_start.minutes;
         dur_n = text[i].duration.hours * 60 + text[i].duration.minutes;
-        if(time_n + dur_n>=780){
-            start = int_to_time(time_n + dur_n);
+        if(time_n + dur_n>=780){//події після 13:00
+            start = int_to_time(time_n + dur_n);//кількість хвилин переводимо у правильний формат часу
             if(i + 1 < text.size()){
                 finish = int_to_time(text[i+1].time_start.hours * 60 + text[i+1].time_start.minutes);
             }
@@ -236,11 +239,11 @@ string free_time(vector <EList> text){
             file.start = start;
             file.finish = finish;
             file.free_dur = free_dur;
-            fout.write((char*)&file, sizeof(FreeList));
-            task_flag = true;
+            fout.write((char*)&file, sizeof(FreeList));//записуємо у файл
+            task_flag = true;//флаг, що у другій половині дня є події
         }
     }
-    if(!task_flag){
+    if(!task_flag){//фільний час, якщо після 13:00 подій нема
         file.start = start;
         file.finish = finish;
         file.free_dur = free_dur;
